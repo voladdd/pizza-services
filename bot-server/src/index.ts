@@ -1,12 +1,13 @@
-import { App } from "@slack/bolt";
+import { App, ExpressReceiver } from "@slack/bolt";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-// const receiver = new ExpressReceiver({
-//   signingSecret: process.env.SLACK_SIGNING_SECRET,
-// });
+const receiver = new ExpressReceiver({
+  signingSecret: process.env.SLACK_SIGNING_SECRET,
+});
 
 const app = new App({
+  receiver,
   token: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
   appToken: process.env.APP_TOKEN,
@@ -99,12 +100,12 @@ app.command("/order-save", async ({ command, ack, say }) => {
   }
 });
 
-// receiver.router.get("/secret-page", (req, res) => {
-//   // You're working with an express req and res now.
-//   res.send("yay!");
-// });
+receiver.router.get("/secret-page", (req, res) => {
+  // You're working with an express req and res now.
+  res.send("yay!");
+});
 
 // app.client.chat.postMessage({
-//   channel: "D04M4PWUHT7",
-//   text: "Hello all",
-// });
+//     channel: "D04M4PWUHT7",
+//     text: "Hello all",
+//   });
