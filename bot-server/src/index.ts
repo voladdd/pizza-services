@@ -1,6 +1,9 @@
 import { App, ExpressReceiver } from "@slack/bolt";
+import { Order } from "./utils";
 import * as dotenv from "dotenv";
 dotenv.config();
+
+let order: Order;
 
 const receiver = new ExpressReceiver({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
@@ -35,7 +38,7 @@ app.command("/order-help", async ({ ack, say }) => {
           type: "section",
           text: {
             type: "mrkdwn",
-            text: " */order-create* \n 1. Название -  \n2. Размер - \n3. Тесто - \n4. Бортик - \n5. Добавки - \n6. Адрес доставки - \n7. Комментарий к заказу - ",
+            text: " */order-create* \nНазвание -  \nРазмер - \nТесто - \nБортик - \nДобавки - \nАдрес доставки - \nКомментарий к заказу - ",
           },
         },
         {
@@ -45,7 +48,7 @@ app.command("/order-help", async ({ ack, say }) => {
           type: "section",
           text: {
             type: "mrkdwn",
-            text: " *Пример заказа* \n\n  */order-create* \n 1. Название - Пепперони фреш \n2. Размер - 30 см\n3. Тесто - традиционное тесто\n4. Бортик - сырный\n5. Добавки - сочные ананасы\n6. Адрес доставки - Ул. Есенина, Дом Каруселина \n7. Комментарий к заказу - Жду, жду, жду",
+            text: " *Пример заказа* \n\n  */order-create* \nНазвание - Пепперони фреш \nРазмер - 30 см\nТесто - традиционное тесто\nБортик - сырный\nДобавки - сочные ананасы\nАдрес доставки - Ул. Есенина, Дом Каруселина \nКомментарий к заказу - Жду, жду, жду",
           },
         },
       ],
@@ -71,7 +74,10 @@ app.command("/order-create", async ({ command, ack, say }) => {
         },
       ],
     });
-    console.log(command.text);
+
+    order = new Order(command.text, command.channel_id, command.user_name);
+
+    console.log(order.getOrderInfo());
   } catch (error) {
     console.log("err");
     console.error(error);
@@ -82,13 +88,13 @@ app.command("/order-save", async ({ command, ack, say }) => {
   try {
     await ack();
     await say({
-      text: "Записал!",
+      text: "Заказ оформлен и передан менеджеру.",
       blocks: [
         {
           type: "section",
           text: {
             type: "mrkdwn",
-            text: "Записал! Подтверди пожалуйста свой заказ с помощью комманды */order-save*",
+            text: "Ура! Заказ оформлен и передан менеджеру.",
           },
         },
       ],
