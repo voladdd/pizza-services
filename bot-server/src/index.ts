@@ -153,11 +153,11 @@ app.command("/order-save", async ({ command, ack, say }) => {
 
 //Slack bot http routing
 receiver.router.post("/nofticate", (req, res) => {
-  console.log(req.body);
+  const { channel, text } = req.body;
+  app.client.chat.postMessage({
+    channel,
+    text,
+  });
+  console.log(text);
   res.json(req.body);
 });
-
-// app.client.chat.postMessage({
-//     channel: "D04M4PWUHT7",
-//     text: "Hello all",
-//   });
