@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:dev": "nodemon"
+    "start:dev": "nodemon",
+    "start:build": "tsc & node dist/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -18,6 +19,7 @@
   },
   "dependencies": {
     "express": "^4.18.2",
+    "got": "^12.5.3",
     "mongodb": "^5.0.0"
   }
 }
