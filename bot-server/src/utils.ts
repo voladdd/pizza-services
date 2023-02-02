@@ -41,9 +41,10 @@ export class Order {
     this.orderInfo.set("UserName", userName);
     this.orderInfo.set("ChannelId", channelId);
     this.orderInfo.set("UserPhoto", userPhoto);
+    this.orderInfo.set("OrderStatus", "Оформлен");
   }
 
   getOrderInfo() {
-    return [...this.orderInfo.entries()];
+    return Object.fromEntries(this.orderInfo);
   }
 }

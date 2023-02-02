@@ -1,13 +1,33 @@
 import { App, ExpressReceiver } from "@slack/bolt";
 import { Order } from "./utils";
+import { MongoClient } from "mongodb";
 import * as dotenv from "dotenv";
+import bodyParser = require("body-parser");
 dotenv.config();
 
-let order: Order;
+//Mongo Setup
+const client = new MongoClient(process.env.MONGO_URI);
+
+async function insertOrderToDb(order: object) {
+  try {
+    const database = client.db("slack_bot_db");
+    const orders = database.collection("orders_collection");
+    const result = await orders.insertOne(order);
+    console.log(`A document was inserted with the _id: ${result.insertedId}`);
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await client.close();
+  }
+}
+
+//Slack bot setup
+let slackOrder: Order;
 
 const receiver = new ExpressReceiver({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
 });
+receiver.router.use(bodyParser.urlencoded({ extended: true }));
+receiver.router.use(bodyParser.json());
 
 const app = new App({
   receiver,
@@ -19,9 +39,12 @@ const app = new App({
 (async () => {
   const port = process.env.PORT || 3000;
   await app.start(port);
+  // await run().catch(console.dir);
+
   console.log(`⚡️ Slack Bolt app is running on port ${port}!`);
 })();
 
+//Slack bot commands
 app.command("/order-help", async ({ ack, say }) => {
   try {
     await ack();
@@ -79,14 +102,14 @@ app.command("/order-create", async ({ command, ack, say, client }) => {
       user: command.user_id,
     });
 
-    order = new Order(
+    slackOrder = new Order(
       command.text,
       command.channel_id,
       command.user_name,
       userProfile.profile.image_512
     );
 
-    console.log(order.getOrderInfo());
+    console.log(slackOrder.getOrderInfo());
   } catch (error) {
     console.log("err");
     console.error(error);
@@ -96,6 +119,7 @@ app.command("/order-create", async ({ command, ack, say, client }) => {
 app.command("/order-save", async ({ command, ack, say }) => {
   try {
     await ack();
+    await insertOrderToDb(slackOrder.getOrderInfo());
     await say({
       text: "Заказ оформлен и передан менеджеру.",
       blocks: [
@@ -112,12 +136,25 @@ app.command("/order-save", async ({ command, ack, say }) => {
   } catch (error) {
     console.log("err");
     console.error(error);
+    await say({
+      text: "При оформлении заказа произошла ошибка.",
+      blocks: [
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: "При оформлении заказа произошла ошибка.",
+          },
+        },
+      ],
+    });
   }
 });
 
-receiver.router.get("/secret-page", (req, res) => {
-  // You're working with an express req and res now.
-  res.send("yay!");
+//Slack bot http routing
+receiver.router.post("/nofticate", (req, res) => {
+  console.log(req.body);
+  res.json(req.body);
 });
 
 // app.client.chat.postMessage({
