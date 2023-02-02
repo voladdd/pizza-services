@@ -1,20 +1,17 @@
-import { MongoClient } from "mongodb";
+import express from "express";
+import ordersRouter from "./orders.router";
 import * as dotenv from "dotenv";
+import DbInstance from "./db/conn";
 dotenv.config();
 
-//Mongo Setup
-const client = new MongoClient(process.env.MONGO_URI);
+//Express Setup
+const app = express();
+const port = process.env.PORT || 4000;
 
-async function run() {
-  try {
-    const database = client.db("slack_bot_db");
-    const orders = database.collection("orders_collection");
-    // const result = await orders.(order);
-    console.log(`A document was inserted with the _id: ${orders}`);
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
-}
+app.use(express.json());
+app.use("/orders", ordersRouter);
+DbInstance.getClient();
 
-run().catch((e) => console.log(e));
+app.listen(port, () => {
+  console.log("server is running at port " + port);
+});
