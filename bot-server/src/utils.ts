@@ -24,7 +24,12 @@ export class Order {
         Адрес доставки - Ул. Есенина, Дом Каруселина
         Комментарий к заказу - Жду, жду, жду`
      */
-  constructor(userMessage: string, channelId: string, userName: string) {
+  constructor(
+    userMessage: string,
+    channelId: string,
+    userName: string,
+    userPhoto: string
+  ) {
     userMessage.split("\n").forEach((row) => {
       const [key, value] = row.split(/\s*-\s*/, 2);
       if (this.associations.has(key)) {
@@ -35,6 +40,7 @@ export class Order {
     });
     this.orderInfo.set("UserName", userName);
     this.orderInfo.set("ChannelId", channelId);
+    this.orderInfo.set("UserPhoto", userPhoto);
   }
 
   getOrderInfo() {

@@ -26,6 +26,7 @@ app.command("/order-help", async ({ ack, say }) => {
   try {
     await ack();
     await say({
+      text: "Кавабанга! 🍕🍕🍕 \n Для того, чтобы заказать пиццу используй пример формы в сообщении ниже.",
       blocks: [
         {
           type: "section",
@@ -59,7 +60,7 @@ app.command("/order-help", async ({ ack, say }) => {
   }
 });
 
-app.command("/order-create", async ({ command, ack, say }) => {
+app.command("/order-create", async ({ command, ack, say, client }) => {
   try {
     await ack();
     await say({
@@ -74,8 +75,16 @@ app.command("/order-create", async ({ command, ack, say }) => {
         },
       ],
     });
+    const userProfile = await client.users.profile.get({
+      user: command.user_id,
+    });
 
-    order = new Order(command.text, command.channel_id, command.user_name);
+    order = new Order(
+      command.text,
+      command.channel_id,
+      command.user_name,
+      userProfile.profile.image_512
+    );
 
     console.log(order.getOrderInfo());
   } catch (error) {
