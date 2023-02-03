@@ -5,7 +5,7 @@ import { isAuth } from "./auth.router";
 
 const ordersRouter = express.Router();
 
-ordersRouter.get("/", async (req, res) => {
+ordersRouter.get("/", isAuth, async (req, res) => {
   const client = DbInstance.getClient();
   try {
     const database = client.db("slack_bot_db");
