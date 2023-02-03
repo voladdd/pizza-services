@@ -1,7 +1,7 @@
 import express from "express";
 import DbInstance from "./db/conn";
 import { ObjectId } from "mongodb";
-// import got from "got";
+import { isAuth } from "./auth.router";
 
 const ordersRouter = express.Router();
 
@@ -25,7 +25,7 @@ interface updateStatusBody {
   OrderStatus: string;
 }
 
-ordersRouter.patch("/:id", async (req, res) => {
+ordersRouter.patch("/:id", isAuth, async (req, res) => {
   const client = DbInstance.getClient();
   const body: updateStatusBody = req.body;
   const id = req.params.id;
