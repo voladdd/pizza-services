@@ -46,16 +46,16 @@ ordersRouter.patch("/:id", async (req, res) => {
 
     try {
       const got = (await import("got")).got;
-
       await got
         .post("http://localhost:3000/nofticate", {
           json: {
             text: `Текущий статус заказа: ${body.OrderStatus}`,
             channel: finded.ChannelId,
+            teamId: finded.TeamId,
           },
         })
         .json();
-      console.log("Sended noftication to bot & got data.");
+      console.log("Sended noftication to bot");
     } catch (error) {
       console.log(error);
     } finally {

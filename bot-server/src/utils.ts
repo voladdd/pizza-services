@@ -28,7 +28,8 @@ export class Order {
     userMessage: string,
     channelId: string,
     userName: string,
-    userPhoto: string
+    userPhoto: string,
+    teamId: string
   ) {
     userMessage.split("\n").forEach((row) => {
       const [key, value] = row.split(/\s*-\s*/, 2);
@@ -41,6 +42,7 @@ export class Order {
     this.orderInfo.set("UserName", userName);
     this.orderInfo.set("ChannelId", channelId);
     this.orderInfo.set("UserPhoto", userPhoto);
+    this.orderInfo.set("TeamId", teamId);
     this.orderInfo.set("OrderStatus", "Оформлен");
   }
 
