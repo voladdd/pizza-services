@@ -12,7 +12,7 @@ ordersRouter.get("/", isAuth, async (req, res) => {
     const result = await database
       .collection("orders_collection")
       .find({})
-      .limit(50)
+      .sort({ lastModified: 1 })
       .toArray();
 
     res.json(result);
