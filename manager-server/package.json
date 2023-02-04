@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prod:build": "npm install",
+    "prod:start": "node dist/index.js",
     "start:dev": "nodemon",
     "start:build": "tsc",
     "start:run": "node dist/index.js"
