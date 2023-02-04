@@ -15,4 +15,14 @@ export class OrdersService {
       headers: { authorization: 'an_access_token' },
     });
   }
+
+  patchOrder(id: string, orderStatus: string) {
+    return this.http.patch(
+      adresses.managerServer + '/orders/' + id,
+      {
+        OrderStatus: orderStatus,
+      },
+      { headers: { authorization: 'an_access_token' } }
+    );
+  }
 }

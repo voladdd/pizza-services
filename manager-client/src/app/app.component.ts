@@ -14,6 +14,7 @@ export class AppComponent implements OnInit {
   title = 'client';
 
   authed = this.isAuthed();
+
   token: string | null = null;
 
   orders: IOrder[] = [];
@@ -29,12 +30,13 @@ export class AppComponent implements OnInit {
 
   signOut(): void {
     this.authed = false;
+    localStorage.removeItem('access_token');
   }
 
   signIn(login: string, password: string) {
     this.authService.signIn(login, password).subscribe({
       next: (v) => {
-        this.token = v.access_token;
+        localStorage.setItem('access_token', v.access_token);
         this.authed = true;
       },
       error: (e) => alert(e.error),
@@ -51,7 +53,6 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.ordersService.getAll().subscribe((orders) => {
       this.orders = orders;
-      console.log(orders);
     });
   }
 
