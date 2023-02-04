@@ -1,0 +1,7 @@
+<h1 class="font-bold">{{ title }}</h1>
+
+<app-order
+  *ngFor="let order of orders"
+  [order]="order"
+  [_id]="order._id"
+></app-order>

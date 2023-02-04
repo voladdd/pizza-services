@@ -1,0 +1,40 @@
+<div class="py-2 px-2 border rounded flex items-center flex-col">
+  <img [src]="order.UserPhoto" [alt]="order.UserName" class="w-1/12" />
+  <h2 class="font-light">
+    <span class="font-medium">{{ order.UserName }}</span> хочет пиццы,
+    приговаривая:
+    <span class="font-medium">"{{ order.Comment }}"</span>
+  </h2>
+  <ul>
+    <li class="font-bold">
+      Пицца: <span class="font-normal">{{ order.Name }}</span>
+    </li>
+    <li class="font-bold">
+      Размер: <span class="font-normal">{{ order.Size }}</span>
+    </li>
+    <li class="font-bold">
+      Тесто: <span class="font-normal">{{ order.Dough }}</span>
+    </li>
+    <li class="font-bold">
+      Кончик: <span class="font-normal">{{ order.Crust }}</span>
+    </li>
+    <li class="font-bold">
+      Вот это добавить: <span class="font-normal">{{ order.Species }}</span>
+    </li>
+    <li class="font-bold">
+      А сюда доставить: <span class="font-normal">{{ order.Address }}</span>
+    </li>
+    <li class="font-bold">
+      Статус заказа:
+      <select #orders (change)="onSelected(orders.value)">
+        <option
+          *ngFor="let status of statuses"
+          [value]="status"
+          [selected]="status === order.OrderStatus"
+        >
+          {{ status }}
+        </option>
+      </select>
+    </li>
+  </ul>
+</div>
